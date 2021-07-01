@@ -20,14 +20,20 @@ def create_ps2sh_multisig_psbt(
     # This at the child pubkey lookup that each input will traverse off of
     xfp_dict = {}
     network = None
-    for xfp_hex, xpub_values in xpubs_dict.items():
+    for xfp_key, xpub_values in xpubs_dict.items():
 
         hd_pubkey_obj = HDPublicKey.parse(xpub_values["xpub_hex"])
 
+        if "xfp" not in xpub_values:
+            raise ValueError(
+                f"xfp_key {xfp_key} item in {xpubs_dict} does not contain an xfp entry"
+            )
+
         # We will use this dict on each input below
-        xfp_dict[xfp_hex] = {
+        xfp_dict[xfp_key] = {
             "xpub_obj": hd_pubkey_obj,
             "base_path": xpub_values["base_path"],
+            "xfp": xpub_values["xfp"],
         }
 
         if network is None:
@@ -56,23 +62,23 @@ def create_ps2sh_multisig_psbt(
         # pubkey lookups needed for validation
         input_pubkey_hexes = []
         total_input_sats = 0
-        for xfp_hex, bip32_child_path in input_dict["path_dict"].items():
-            if xfp_hex not in xfp_dict:
+        for xfp_key, bip32_child_path in input_dict["path_dict"].items():
+            if xfp_key not in xfp_dict:
                 raise ValueError(
-                    f"xfp_hex {xfp_hex} from input #{cnt} not supplied in xpubs_dict:  {xpubs_dict}"
+                    f"xfp_key {xfp_key} from input #{cnt} not supplied in xpubs_dict:  {xpubs_dict}"
                 )
 
-            child_hd_pubkey = xfp_dict[xfp_hex]["xpub_obj"].traverse(bip32_child_path)
+            child_hd_pubkey = xfp_dict[xfp_key]["xpub_obj"].traverse(bip32_child_path)
             input_pubkey_hexes.append(child_hd_pubkey.sec().hex())
 
             full_path = combine_bip32_paths(
-                first_path=xfp_dict[xfp_hex]["base_path"], second_path=bip32_child_path
+                first_path=xfp_dict[xfp_key]["base_path"], second_path=bip32_child_path
             )
 
             # Enhance the PSBT
             named_hd_pubkey_obj = NamedHDPublicKey.from_hd_pub(
                 child_hd_pub=child_hd_pubkey,
-                fingerprint_hex=xfp_hex,
+                fingerprint_hex=xfp_dict[xfp_key]["xfp"],
                 full_path=full_path,
             )
             pubkey_lookup[named_hd_pubkey_obj.sec()] = named_hd_pubkey_obj
@@ -119,27 +125,27 @@ def create_ps2sh_multisig_psbt(
         if output_dict.get("path_dict"):
             # Confirm change
             output_pubkey_hexes = []
-            for xfp_hex, bip32_child_path in output_dict["path_dict"].items():
+            for xfp_key, bip32_child_path in output_dict["path_dict"].items():
 
-                if xfp_hex not in xfp_dict:
+                if xfp_key not in xfp_dict:
                     raise ValueError(
-                        f"xfp_hex {xfp_hex} from output #{cnt} not supplied in xpubs_dict:  {xpubs_dict}"
+                        f"xfp_key {xfp_key} from output #{cnt} not supplied in xpubs_dict:  {xpubs_dict}"
                     )
 
-                child_hd_pubkey = xfp_dict[xfp_hex]["xpub_obj"].traverse(
+                child_hd_pubkey = xfp_dict[xfp_key]["xpub_obj"].traverse(
                     bip32_child_path
                 )
                 output_pubkey_hexes.append(child_hd_pubkey.sec().hex())
 
                 full_path = combine_bip32_paths(
-                    first_path=xfp_dict[xfp_hex]["base_path"],
+                    first_path=xfp_dict[xfp_key]["base_path"],
                     second_path=bip32_child_path,
                 )
 
                 # Enhance the PSBT
                 named_hd_pubkey_obj = NamedHDPublicKey.from_hd_pub(
                     child_hd_pub=child_hd_pubkey,
-                    fingerprint_hex=xfp_hex,
+                    fingerprint_hex=xfp_dict[xfp_key]["xfp"],
                     full_path=full_path,
                 )
                 pubkey_lookup[named_hd_pubkey_obj.sec()] = named_hd_pubkey_obj

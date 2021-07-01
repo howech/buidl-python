@@ -45,15 +45,17 @@ class P2SHTest(TestCase):
 
         kwargs = {
             "xpubs_dict": {
-                "e0c595c5": {
+                "e0c595c5-key": {
                     # action x12
                     "xpub_hex": "tpubDBnspiLZfrq1V7j1iuMxGiPsuHyy6e4QBnADwRrbH89AcnsUEMfWiAYXmSbMuNFsrMdnbQRDGGSM1AFGL6zUWNVSmwRavoJzdQBbZKLgLgd",
                     "base_path": "m/45h/0",
+                    "xfp": "e0c595c5",
                 },
-                "838f3ff9": {
+                "838f3ff9-key": {
                     # agent x12
                     "xpub_hex": "tpubDAKJicb9Tkw34PFLEBUcbnH99twN3augmg7oYHHx9Aa9iodXmA4wtGEJr8h2XjJYqn2j1v5qHLjpWEe8aPihmC6jmsgomsuc9Zeh4ZushNk",
                     "base_path": "m/45h/0",
+                    "xfp": "838f3ff9",
                 },
             },
             "input_dicts": [
@@ -61,8 +63,8 @@ class P2SHTest(TestCase):
                     "quorum_m": 1,
                     "path_dict": {
                         # xfp: child_path
-                        "e0c595c5": "m/0/0",
-                        "838f3ff9": "m/0/0",
+                        "e0c595c5-key": "m/0/0",
+                        "838f3ff9-key": "m/0/0",
                     },
                     "prev_tx_dict": {
                         "hex": "02000000000101380bff9db676d159ad34849079c77e0d5c1df9c841b6a6640cba9bfc15077eea0100000000feffffff02008312000000000017a914d96bb9c5888f473dbd077d77009fb49ba2fda24287611c92a00100000017a9148722f07fbcf0fc506ea4ba9daa811d11396bbcfd870247304402202fe3c2f18e1486407bf0baabd2b3376102f0844a754d8e2fb8de71b39b3f76c702200c1fe8f7f9ef5165929ed51bf754edd7dd3e591921979cf5b891c841a1fd19d80121037c8fe1fa1ae4dfff522c532917c73c4884469e3b6a284e9a039ec612dca78eefd29c1e00",
@@ -133,15 +135,17 @@ class P2SHTest(TestCase):
         kwargs = {
             # this part is unchanged from the previous
             "xpubs_dict": {
-                "e0c595c5": {
+                "e0c595c5-key": {
                     # action x12
                     "xpub_hex": "tpubDBnspiLZfrq1V7j1iuMxGiPsuHyy6e4QBnADwRrbH89AcnsUEMfWiAYXmSbMuNFsrMdnbQRDGGSM1AFGL6zUWNVSmwRavoJzdQBbZKLgLgd",
                     "base_path": "m/45h/0",
+                    "xfp": "e0c595c5",
                 },
-                "838f3ff9": {
+                "838f3ff9-key": {
                     # agent x12
                     "xpub_hex": "tpubDAKJicb9Tkw34PFLEBUcbnH99twN3augmg7oYHHx9Aa9iodXmA4wtGEJr8h2XjJYqn2j1v5qHLjpWEe8aPihmC6jmsgomsuc9Zeh4ZushNk",
                     "base_path": "m/45h/0",
+                    "xfp": "838f3ff9",
                 },
             },
             # this part is changed:
@@ -150,8 +154,8 @@ class P2SHTest(TestCase):
                     "quorum_m": 1,
                     "path_dict": {
                         # xfp: child_path
-                        "e0c595c5": "m/0/1",
-                        "838f3ff9": "m/0/1",
+                        "e0c595c5-key": "m/0/1",
+                        "838f3ff9-key": "m/0/1",
                     },
                     "prev_tx_dict": {
                         "hex": "020000000001012c40a6810f7a670913d171e1f5b203ca01ed45ed3bf68b649850491eecb560080100000000feffffff02a7e50941010000001600147b3af2253632c3000f9cdd531747107fe249c7d1102700000000000017a91459fb638aaa55a7119a09faf5e8b2ce8a879cce338702473044022004666d885310990e1b0a61e93b1490acb172d43200d6fcfa22e89905b7f3094d02204a705e4a4fc8cab97f7d146f481e70718ee4567486796536d14c7808be3fd866012102cc3b01d2192b5275d3fda7f82eaf593dfb8ca9333f7296f93da401f8d1821335619f1e00",
@@ -169,8 +173,8 @@ class P2SHTest(TestCase):
                     "quorum_m": 1,
                     "path_dict": {
                         # xfp: child_path (m/1/* is receiving addr branch)
-                        "e0c595c5": "m/1/0",
-                        "838f3ff9": "m/1/0",
+                        "e0c595c5-key": "m/1/0",
+                        "838f3ff9-key": "m/1/0",
                     },
                 },
                 {
